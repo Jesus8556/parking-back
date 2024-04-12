@@ -6,6 +6,10 @@ const garageSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        status:{
+            type:Boolean,
+            default:true
+        },
         description:{
             type:String,
             required:true

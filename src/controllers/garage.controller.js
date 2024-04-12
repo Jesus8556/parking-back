@@ -14,7 +14,7 @@ const createGarage = async (req, res) => {
             pricePerHour,
             latitud,
             user: req.userId,
-            longitud
+            longitud,
         });
         if (req.files?.imagen) {
             const result = await uploadImage(req.files.imagen.tempFilePath);
