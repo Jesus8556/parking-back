@@ -3,12 +3,13 @@ const jwt = require("jsonwebtoken");
 const config = require("../config")
 
 const signUp = async (req,res) => {
-    const {name,email,password} = req.body;
+    const {name,username,email,password} = req.body;
     console.log(req.body)
     try {
         const hashedPassword = await User.encriptar(password)
         const newUser = User({
             name,
+            username,
             email,
             password:hashedPassword
         });
