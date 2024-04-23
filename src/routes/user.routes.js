@@ -2,10 +2,12 @@ const express = require("express")
 const router = express.Router()
 
 const userController = require("../controllers/user.controller");
-
+const {verifyToken} = require("../middlewares/authjwt")
 
 
 router.get("/",userController.getUser);
+
+router.get("/perfil",verifyToken,userController.getPerfil);
 
 router.get("/:userId",userController.getUserById);
 

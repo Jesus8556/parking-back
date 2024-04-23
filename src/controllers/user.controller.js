@@ -11,6 +11,20 @@ const getUser = async (req,res) =>{
 
     };
 };
+const getPerfil = async (req, res) => {
+    try {
+        const user = await User.find({ _id: req.userId })
+        console.log(req.userId)
+        res.json(user)
+
+    } catch (error) {
+        console.error('Error al obtener perfil:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+}
+
+
 const getUserById = async(req,res) =>{
     try{
         const user = await User.findById(req.params.userId);
@@ -60,5 +74,6 @@ module.exports = {
     getUser,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    getPerfil
 }
