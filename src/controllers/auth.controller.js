@@ -14,7 +14,7 @@ const signUp = async (req,res) => {
             password:hashedPassword
         });
         const saveUser = await newUser.save();
-        const token = jwt.sign({ id: saveUser._id }, config.SECRET, { expiresIn: 86400 });
+        const token = jwt.sign({ id: saveUser._id ,name:saveUser.name}, config.SECRET, { expiresIn: 86400 });
 
         res.status(200).json({ token });
         
@@ -46,7 +46,7 @@ const checkUser = async (req, res) => {
         if (!userFound) return res.status(404).json({ message: "Usuario no encontrado" });
 
         // El usuario está registrado
-        const token = jwt.sign({ id: userFound._id }, config.SECRET, { expiresIn: 86400 });
+        const token = jwt.sign({ id: userFound._id ,name:userFound.name}, config.SECRET, { expiresIn: 86400 });
         res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ message: error.message });
