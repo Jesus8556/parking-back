@@ -1,6 +1,7 @@
 const { Oferta } = require("../models/oferta");
 const { Garage } = require("../models/garaje");
-const {haversine} = require("../utils/haversine");
+const { haversine } = require("../utils/haversine");
+const {obtenerSocket} = require("../sockets")
 const getOferta = async (req, res) => {
     try {
         const oferta = await Oferta.find();
@@ -14,63 +15,67 @@ const getOferta = async (req, res) => {
 
 const ofertaCercana = async (req, res) => {
     try {
-      const { userId } = req.params;
-  
-      console.log('User ID:', userId);
-  
-      // Encuentra los garajes del usuario
-      const garageUsuario = await Garage.find({ user: userId });
-  
-      if (garageUsuario.length === 0) {
-        console.log('No se encontraron garajes para este usuario');
-        return res.status(404).json({ mensaje: 'No se encontraron garajes para este usuario' });
-      }
-    
-      // Encuentra todas las ofertas
-      const ofertas = await Oferta.find();
-  
-      console.log('Ofertas encontradas:', ofertas.length);
-  
-      const radius = 500; // Radio en metros
-      
-      // Filtra las ofertas cercanas
-      const ofertasCercanas = ofertas.filter((oferta) => {
-        return garageUsuario.some((garage) => {
-          const distancia = haversine(
-            garage.latitud,
-            garage.longitud,
-            oferta.latitud,
-            oferta.longitud
-          );
-          console.log(distancia);
-          return distancia <= radius;
+        const { userId } = req.params;
+
+        console.log('User ID:', userId);
+
+        // Encuentra los garajes del usuario
+        const garageUsuario = await Garage.find({ user: userId });
+
+        if (garageUsuario.length === 0) {
+            console.log('No se encontraron garajes para este usuario');
+            return res.status(404).json({ mensaje: 'No se encontraron garajes para este usuario' });
+        }
+
+        // Encuentra todas las ofertas
+        const ofertas = await Oferta.find();
+
+        console.log('Ofertas encontradas:', ofertas.length);
+
+        const radius = 500; // Radio en metros
+
+        // Filtra las ofertas cercanas
+        const ofertasCercanas = ofertas.filter((oferta) => {
+            return garageUsuario.some((garage) => {
+                const distancia = haversine(
+                    garage.latitud,
+                    garage.longitud,
+                    oferta.latitud,
+                    oferta.longitud
+                );
+                console.log(distancia);
+                return distancia <= radius;
+            });
         });
-      });
-  
-      console.log('Ofertas cercanas encontradas:', ofertasCercanas.length);
-  
-      res.json(ofertasCercanas);
-      
+
+        console.log('Ofertas cercanas encontradas:', ofertasCercanas.length);
+
+        res.json(ofertasCercanas);
+
     } catch (error) {
-      console.error("Error al obtener ofertas cercanas:", error);
-      res.status(500).json({ error: 'Error interno del servidor' });
+        console.error("Error al obtener ofertas cercanas:", error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
-  };
-  
+};
+
 
 const createOferta = async (req, res) => {
     try {
+        const io = obtenerSocket()
         const { filtroAlquiler, monto, latitud, longitud } = req.body
 
         const newOferta = new Oferta({
             filtroAlquiler,
             monto,
             user: req.userId,
+            name: req.userName,
             latitud,
             longitud
         })
 
-        const ofertaSave = await newOferta.save()
+        const ofertaSave = await newOferta.save();
+        io.emit("nueva_oferta", ofertaSave);
+
 
         res.status(201).json(ofertaSave)
     } catch (error) {

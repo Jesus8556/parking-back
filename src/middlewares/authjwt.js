@@ -11,8 +11,10 @@ const verifyToken = async (req, res, next) => {
         const decoded = jwt.verify(token, config.SECRET)
 
         req.userId = decoded.id;
+        req.userName = decoded.name;
 
-        const user = await User.findById(req.userId, { password: 0 })
+        const user = await User.findById(req.userId,{ password: 0 })
+
         if (!user) return res.status(404).json({ message: "El usuario no existe" })
         next()
 

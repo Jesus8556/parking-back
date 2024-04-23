@@ -14,6 +14,9 @@ const ofertaSchema = mongoose.Schema(
             ref: "User",
             type: mongoose.Schema.Types.ObjectId
         },
+        name:{
+            type:String,  
+        },
         latitud: {
             type: Number,
 
