@@ -20,12 +20,6 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        ignoredOffers: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Oferta',
-            },
-        ],
     },
 );
 

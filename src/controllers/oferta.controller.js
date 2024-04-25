@@ -31,7 +31,7 @@ const ofertaCercana = async (req, res) => {
         }
 
         // Encuentra todas las ofertas
-        const ofertas = await Oferta.find();
+        const ofertas = await Oferta.find({ ignoredBy: { $nin: [userId] } });
 
         console.log('Ofertas encontradas:', ofertas.length);
 
@@ -50,8 +50,6 @@ const ofertaCercana = async (req, res) => {
                 return distancia <= radius;
             });
         });
-
-        console.log('Ofertas cercanas encontradas:', ofertasCercanas.length);
 
         res.json(ofertasCercanas);
 
@@ -134,17 +132,18 @@ const ignorarOferta = async (req, res) => {
     try {
         const { ofertaId } = req.params;
         const userId = req.userId;
+        console.log(ofertaId)
 
-        const user = await User.findById({_id:userId});
+        const oferta = await Oferta.findById(ofertaId);
 
-        if (!user) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+        if (!oferta) {
+            return res.status(404).json({ message: 'Oferta no encontrada' });
         }
 
         // Agregar la oferta a la lista de ofertas ignoradas si no está ya presente
-        if (!user.ignoredOffers.includes(ofertaId)) {
-            user.ignoredOffers.push(ofertaId);
-            await user.save();
+        if (!oferta.ignoredBy.includes(userId)) {
+            oferta.ignoredBy.push(userId);
+            await oferta.save();
         }
 
         res.status(200).json({ message: 'Oferta ignorada con éxito' });
