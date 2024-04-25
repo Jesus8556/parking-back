@@ -1,7 +1,10 @@
 const { Oferta } = require("../models/oferta");
 const { Garage } = require("../models/garaje");
+const User  = require("../models/user");
+
 const { haversine } = require("../utils/haversine");
-const {obtenerSocket} = require("../sockets")
+const { obtenerSocket } = require("../sockets")
+
 const getOferta = async (req, res) => {
     try {
         const oferta = await Oferta.find();
@@ -127,6 +130,32 @@ const deleteOferta = async (req, res) => {
     }
 }
 
+const ignorarOferta = async (req, res) => {
+    try {
+        const { ofertaId } = req.params;
+        const userId = req.userId;
+
+        const user = await User.findById({_id:userId});
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Agregar la oferta a la lista de ofertas ignoradas si no está ya presente
+        if (!user.ignoredOffers.includes(ofertaId)) {
+            user.ignoredOffers.push(ofertaId);
+            await user.save();
+        }
+
+        res.status(200).json({ message: 'Oferta ignorada con éxito' });
+    } catch (error) {
+        console.error('Error al ignorar la oferta:', error);
+        res.status(500).json({ message: 'Error al ignorar la oferta' });
+    }
+}
+
+
+
 
 module.exports = {
     getOferta,
@@ -134,6 +163,7 @@ module.exports = {
     getOfertaById,
     updateOferta,
     deleteOferta,
-    ofertaCercana
+    ofertaCercana,
+    ignorarOferta
 
 }

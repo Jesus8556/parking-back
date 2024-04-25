@@ -11,4 +11,8 @@ router.delete("/:ofertaId",ofertaController.deleteOferta);
 
 
 router.get("/oferta-cercana/:userId",verifyToken,ofertaController.ofertaCercana);
+
+router.post("/ignorar/:ofertaId",verifyToken,ofertaController.ignorarOferta);
+
+
 module.exports = router;

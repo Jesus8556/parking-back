@@ -7,19 +7,25 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        username:{
-            type:String,
-            required:true
+        username: {
+            type: String,
+            required: true
         },
         email: {
             type: String,
-            unique:true,
+            unique: true,
             required: true
         },
-        password:{
-            type:String,
+        password: {
+            type: String,
             required: true
-        },  
+        },
+        ignoredOffers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Oferta',
+            },
+        ],
     },
 );
 
@@ -35,10 +41,10 @@ userSchema.statics.encriptar = async (password) => {
 
 
 
-userSchema.statics.comparar = async(password,receivedPassword) =>{
-    return await bcrypt.compare(password,receivedPassword)
+userSchema.statics.comparar = async (password, receivedPassword) => {
+    return await bcrypt.compare(password, receivedPassword)
 }
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User
