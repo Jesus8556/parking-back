@@ -1,5 +1,5 @@
 const {contraOferta} = require("../models/contraoferta");
-
+const { obtenerSocket } = require("../sockets");
 
 const getOferta = async (req,res) =>{
     try {
@@ -14,6 +14,7 @@ const getOferta = async (req,res) =>{
 
 const createOferta = async (req,res) => {
     try {
+        const io = obtenerSocket();
         const { monto , garage} = req.body
 
         const newOferta = new contraOferta({
@@ -25,6 +26,9 @@ const createOferta = async (req,res) => {
         })
 
         const ofertaSave = await newOferta.save()
+        io.emit("nueva_contraOferta", ofertaSave);
+
+
 
         res.status(201).json(ofertaSave)
     } catch (error) {
