@@ -20,38 +20,55 @@ const ofertaCercana = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        console.log('User ID:', userId);
-
         // Encuentra los garajes del usuario
-        const garageUsuario = await Garage.find({ user: userId });
+        const garajesUsuario = await Garage.find({ user: userId });
 
-        if (garageUsuario.length === 0) {
-            console.log('No se encontraron garajes para este usuario');
+        if (garajesUsuario.length === 0) {
             return res.status(404).json({ mensaje: 'No se encontraron garajes para este usuario' });
         }
 
-        // Encuentra todas las ofertas
+        // Encuentra todas las ofertas no ignoradas por el usuario
         const ofertas = await Oferta.find({ ignoredBy: { $nin: [userId] } });
-
-        console.log('Ofertas encontradas:', ofertas.length);
 
         const radius = 500; // Radio en metros
 
         // Filtra las ofertas cercanas
         const ofertasCercanas = ofertas.filter((oferta) => {
-            return garageUsuario.some((garage) => {
+            return garajesUsuario.some((garage) => {
                 const distancia = haversine(
                     garage.latitud,
                     garage.longitud,
                     oferta.latitud,
                     oferta.longitud
                 );
-                console.log(distancia);
                 return distancia <= radius;
             });
         });
 
-        res.json(ofertasCercanas);
+        // Incluye información de garajes cercanos en las ofertas
+        const ofertasConGarajesCercanos = ofertasCercanas.map((oferta) => {
+            const garajesCercanos = garajesUsuario.filter((garage) => {
+                const distancia = haversine(
+                    garage.latitud,
+                    garage.longitud,
+                    oferta.latitud,
+                    oferta.longitud
+                );
+                return distancia <= radius;
+            });
+
+            return {
+                ...oferta.toObject(),
+                garajesCercanos: garajesCercanos.map((garage) => ({
+                    id: garage._id.toString(),
+                    address: garage.address,
+                    latitud: garage.latitud,
+                    longitud: garage.longitud,
+                })),
+            };
+        });
+
+        res.json(ofertasConGarajesCercanos);
 
     } catch (error) {
         console.error("Error al obtener ofertas cercanas:", error);
