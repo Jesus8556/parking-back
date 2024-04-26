@@ -138,6 +138,9 @@ const deleteOferta = async (req, res) => {
             return res.status(404).json({ error: "No existe la oferta" });
         };
         res.status(200).json({ message: "Eliminado correctamente" });
+        const io = obtenerSocket();
+
+        io.emit("oferta_eliminada",{ofertaId});
 
     } catch (error) {
         console.error('Error al eliminar oferta:', error);
