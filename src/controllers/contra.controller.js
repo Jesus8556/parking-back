@@ -14,13 +14,14 @@ const getOferta = async (req,res) =>{
 
 const createOferta = async (req,res) => {
     try {
-        const { monto } = req.body
+        const { monto , garage} = req.body
 
         const newOferta = new contraOferta({
             
             monto,
             user:req.userId,
-            oferta:req.params.ofertaId
+            oferta:req.params.ofertaId,
+            garage
         })
 
         const ofertaSave = await newOferta.save()
