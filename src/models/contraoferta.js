@@ -2,30 +2,45 @@ const mongoose = require("mongoose");
 
 const contraSchema = mongoose.Schema(
     {
-        oferta:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"Oferta",
-            required:true
+        oferta: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Oferta",
+            required: true
         },
-        user:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            required:true
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         },
-        monto:{
-            type:Number,
-            required:true
+        garage: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Garage',
         },
-          
+        estado: {
+            type: String,
+            enum: ['Pendiente', 'Aceptada', 'Rechazada'], // Enum para el estado de la contraoferta
+            default: 'Pendiente',
+        },
+
+        monto: {
+            type: Number,
+            required: true
+        },
+        fechaCreacion: {
+            type: Date,
+            default: Date.now,
+          },
+
+
     },
     {
-        timestamps:true,
-        versionKey:false
+        timestamps: true,
+        versionKey: false
     }
-    
+
 );
 
-const contraOferta = mongoose.model("Contraoferta",contraSchema);
+const contraOferta = mongoose.model("Contraoferta", contraSchema);
 
 module.exports = {
     contraOferta
