@@ -17,6 +17,10 @@ const ofertaSchema = mongoose.Schema(
         name:{
             type:String,  
         },
+        hora:{
+            type:Number
+        },
+        
         ignoredBy: [{ // Agregamos esto para rastrear usuarios que ignoran
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

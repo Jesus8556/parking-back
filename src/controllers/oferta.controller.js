@@ -80,7 +80,7 @@ const ofertaCercana = async (req, res) => {
 const createOferta = async (req, res) => {
     try {
         const io = obtenerSocket()
-        const { filtroAlquiler, monto, latitud, longitud } = req.body
+        const { filtroAlquiler, monto,hora, latitud, longitud } = req.body
 
         const newOferta = new Oferta({
             filtroAlquiler,
@@ -88,7 +88,8 @@ const createOferta = async (req, res) => {
             user: req.userId,
             name: req.userName,
             latitud,
-            longitud
+            longitud,
+            hora
         })
 
         const ofertaSave = await newOferta.save();
