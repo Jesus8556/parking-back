@@ -10,6 +10,6 @@ router.get("/",contraController.getOferta);
 router.get("/:ofertaId",contraController.getOfertaById);
 router.put("/:ofertaId",contraController.updateOferta);
 router.delete("/:ofertaId",contraController.deleteOferta);
-router.patch("/:ofertaId", contraController.updateOferta);
+router.patch("/:ofertaId", contraController.patchOferta);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const contraSchema = mongoose.Schema(
             ref: "User",
             required: true
         },
+
         garage: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Garage',
@@ -20,6 +21,12 @@ const contraSchema = mongoose.Schema(
             type: String,
             enum: ['Pendiente', 'Aceptada', 'Rechazada'], // Enum para el estado de la contraoferta
             default: 'Pendiente',
+        },
+        pago:{
+            type: String,
+            enum: ["Pendiente","Yape","Plin","Efectivo"],
+            default:"Pendiente",
+
         },
 
         monto: {
