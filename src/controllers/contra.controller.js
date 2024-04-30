@@ -67,9 +67,17 @@ const updateOferta = async(req,res) => {
 
 const patchOferta = async(req,res) => {
     try {
-        const updateOferta = await contraOferta.findByIdAndUpdate(req.params.ofertaId, req.body, {
-            new: true
-        });
+        const updates = {
+            ...req.body,
+            userAccept: req.userId, // Asignar el ID del usuario autenticado
+          };
+
+
+        const updateOferta = await contraOferta.findByIdAndUpdate(
+            req.params.ofertaId, 
+            updates, 
+            {new: true}
+        );
         res.status(200).json(updateOferta);
         
     } catch (error) {

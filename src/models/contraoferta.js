@@ -12,6 +12,11 @@ const contraSchema = mongoose.Schema(
             ref: "User",
             required: true
         },
+        userAccept: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
 
         garage: {
             type: mongoose.Schema.Types.ObjectId,
