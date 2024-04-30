@@ -13,6 +13,8 @@ router.get("/:userId",userController.getUserById);
 
 router.put("/:userId",userController.updateUser);
 
+router.patch("/:userId", userController.updateUser);
+
 router.delete("/:userId",userController.deleteUser);
 
 
