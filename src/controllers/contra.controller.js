@@ -69,7 +69,8 @@ const patchOferta = async(req,res) => {
     try {
         const updates = {
             ...req.body,
-            userAccept: req.userId, // Asignar el ID del usuario autenticado
+            userAccept: req.userId,
+            nameAccept: req.userName // Asignar el ID del usuario autenticado
           };
 
 
@@ -78,6 +79,14 @@ const patchOferta = async(req,res) => {
             updates, 
             {new: true}
         );
+
+        if (updateOferta.estado === "Aceptada") {
+            // Emite el evento solo si la oferta fue aceptada
+            io.emit("contraoferta_aceptada", {
+                ofertaId: req.params.ofertaId,
+                data: updateOferta,
+            });
+        }
         res.status(200).json(updateOferta);
         
     } catch (error) {
@@ -101,6 +110,19 @@ const deleteOferta = async(req,res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
+const getOfertaAceptada = async (req,res) =>{
+    try {
+        const oferta = await contraOferta.find({
+             user: req.userId,
+             estado: 'Aceptada' })
+        res.json(oferta)
+
+
+    } catch (error) {
+        console.error('Error al obtener ofertas acpetadas:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
 
 module.exports = {
     getOferta,
@@ -108,5 +130,6 @@ module.exports = {
     createOferta,
     updateOferta,
     deleteOferta,
-    patchOferta
+    patchOferta,
+    getOfertaAceptada
 }

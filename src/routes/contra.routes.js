@@ -11,5 +11,6 @@ router.get("/:ofertaId",contraController.getOfertaById);
 router.put("/:ofertaId",contraController.updateOferta);
 router.delete("/:ofertaId",contraController.deleteOferta);
 router.patch("/:ofertaId",verifyToken, contraController.patchOferta);
+router.get("/oferta-aceptada",verifyToken,contraController.getOfertaAceptada);
 
 module.exports = router;
