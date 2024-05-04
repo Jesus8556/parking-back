@@ -17,11 +17,7 @@ const contraSchema = mongoose.Schema(
             ref: "User",
             required: false
         },
-        nameAccept:{
-            type:String,
-            default: 'Pendiente',
-        },
-
+ 
         garage: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Garage',

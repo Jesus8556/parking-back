@@ -70,7 +70,6 @@ const patchOferta = async(req,res) => {
         const updates = {
             ...req.body,
             userAccept: req.userId,
-            nameAccept: req.userName // Asignar el ID del usuario autenticado
           };
 
 
@@ -110,19 +109,7 @@ const deleteOferta = async(req,res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
-const getOfertaAceptada = async (req,res) =>{
-    try {
-        const oferta = await contraOferta.find({
-             user: req.userId,
-             estado: 'Aceptada' })
-        res.json(oferta)
 
-
-    } catch (error) {
-        console.error('Error al obtener ofertas acpetadas:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-}
 
 module.exports = {
     getOferta,
@@ -131,5 +118,4 @@ module.exports = {
     updateOferta,
     deleteOferta,
     patchOferta,
-    getOfertaAceptada
 }
