@@ -12,6 +12,20 @@ const getOferta = async (req,res) =>{
     }
 }
 
+const getOfertaAceptada =  async(req,res) =>{
+    console.log(req.userId);
+    try {
+        const oferta = await contraOferta.find({
+            user:req.userId,
+            estado:"Aceptada"});
+        res.json(oferta);
+    } catch (error) {
+        console.error("Error al obtener oferta aceptada")
+        res.status(500).json({error:"Error interno del servidor"})
+        
+    }
+}
+
 const createOferta = async (req,res) => {
     try {
         const io = obtenerSocket();
@@ -113,6 +127,7 @@ const deleteOferta = async(req,res) => {
 
 module.exports = {
     getOferta,
+    getOfertaAceptada,
     getOfertaById,
     createOferta,
     updateOferta,

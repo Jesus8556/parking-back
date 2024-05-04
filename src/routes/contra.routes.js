@@ -7,6 +7,7 @@ const {verifyToken} = require("../middlewares/authjwt");
 router.post("/:ofertaId",verifyToken,contraController.createOferta);
 
 router.get("/",contraController.getOferta);
+router.get("/aceptada",verifyToken,contraController.getOfertaAceptada);
 
 router.get("/:ofertaId",contraController.getOfertaById);
 
