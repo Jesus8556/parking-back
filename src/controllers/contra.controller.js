@@ -1,5 +1,5 @@
 const {contraOferta} = require("../models/contraoferta");
-const { obtenerSocket } = require("../sockets");
+const { obtenerSocket } = require("../sockets")
 
 const getOferta = async (req,res) =>{
     try {
@@ -81,6 +81,8 @@ const updateOferta = async(req,res) => {
 
 const patchOferta = async(req,res) => {
     try {
+        const io = obtenerSocket();
+
         const updates = {
             ...req.body,
             userAccept: req.userId,
